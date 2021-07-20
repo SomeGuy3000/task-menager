@@ -15,13 +15,10 @@ module.exports = (sequelize, DataTypes) => {
   };
   TaskProgress.init({
     taskID: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
-    userID: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
+    userID: DataTypes.INTEGER,
     duration: DataTypes.INTEGER
   }, {
     sequelize,
