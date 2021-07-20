@@ -6,7 +6,7 @@ const { sequelize } = require('./models');
 const app = new Koa();
 const apiRouter = require('./router/api');
 
-sequelize.sync({force: true});
+sequelize.sync();
 
 app
   .use(json())
