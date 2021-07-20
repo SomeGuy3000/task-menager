@@ -53,5 +53,14 @@ module.exports = {
                 "code": 204
             };
         }
+    },
+    changeMainTask: async ctx => {
+
+    },
+    endTask: async ctx => {
+
+    },
+    getCorrentTask: async ctx => {
+
     }
 }
