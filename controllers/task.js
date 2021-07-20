@@ -1,7 +1,5 @@
 const { Task, TaskProgress} = require('../models');
 let moment = require('moment');
-const { duration } = require('moment');
-
 
 module.exports = {
     getAllTasks: async ctx => {
@@ -12,6 +10,41 @@ module.exports = {
             "code": 200,
             "data": tasks
         };
+    },
+    getCurrentTask: async ctx => {
+        let userID = ctx.request.query.userID;
+
+        if (userID){
+            const currentTaskProgress = await TaskProgress.findOne({
+                where: {
+                    userID: userID
+                }
+            });
+            if (currentTaskProgress && currentTaskProgress.taskID){
+                const currentTask = await Task.findOne({
+                    where: {
+                        id: currentTaskProgress.taskID
+                    }
+                });
+                ctx.status = 200;
+                ctx.response.body = {
+                    "message": "ok",
+                    "code": 200,
+                    "data": currentTask
+                };
+            }
+            else {
+                ctx.status = 200;
+                ctx.response.body = {
+                    "message": "user is not assigned to the task",
+                    "code": 200,
+                    "data": []
+                };
+            }
+        }
+        else {
+            ctx.status = 204;
+        }
     },
     createTask: async ctx => {
         const body = ctx.request.body;
@@ -27,15 +60,23 @@ module.exports = {
                         taskName: body.taskName,
                         finished: 0
                     });
-                    console.log(tasks.id)
-                    const tasksInProgress = await TaskProgress.create({
-                        taskID: tasks.id
-                    });
-                    ctx.status = 201;
-                    ctx.response.body = {
-                        "message": "accept",
-                        "code": 201
-                    };
+                    if (tasks){
+                        const tasksInProgress = await TaskProgress.create({
+                            taskID: tasks.id
+                        });
+                        ctx.status = 201;
+                        ctx.response.body = {
+                            "message": "accept",
+                            "code": 201
+                        };
+                    }
+                    else{
+                        ctx.status = 500;
+                        ctx.body = {
+                            "message": "error",
+                            "code": 500
+                        };
+                    }
                 }
                 catch {
                     ctx.status = 500;
@@ -80,13 +121,13 @@ module.exports = {
                         await taskInProgress.update({
                             userID: body.userID
                         });
-                    }
 
-                    ctx.status = 201;
-                    ctx.response.body = {
-                        "message": "accept",
-                        "code": 201
-                    }; 
+                        ctx.status = 201;
+                        ctx.response.body = {
+                            "message": "accept",
+                            "code": 201
+                        }; 
+                    }
                 }
                 else{
                     ctx.status = 409;
@@ -102,12 +143,35 @@ module.exports = {
         }
     },
     endTask: async ctx => {
+        let taskID = ctx.request.query.taskID;
 
-    },
-    getCurrentTask: async ctx => {
+        if (taskID){
+            const taskProgress = await TaskProgress.findOne({
+                where: {
+                    taskID: taskID
+                }
+            })
+            await taskProgress.destroy();
 
+            const task = await Task.findOne({
+                where: {
+                    id: taskID
+                }
+            })
+            await task.destroy();
+
+            ctx.status = 200;
+            ctx.response.body = {
+                    "message": "ok",
+                    "code": 200,
+                };
+        }
+        else {
+            ctx.status = 204;
+        }
     }
 }
+
 async function stopPreviousTask (userID) {
     const taskAlreadyInProgress = await TaskProgress.findOne({
         where: {
