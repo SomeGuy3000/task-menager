@@ -104,7 +104,7 @@ module.exports = {
     endTask: async ctx => {
 
     },
-    getCorrentTask: async ctx => {
+    getCurrentTask: async ctx => {
 
     }
 }
