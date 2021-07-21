@@ -127,7 +127,6 @@ async function stopPreviousTask(userID) {
       duration: diffInSec,
     });
     return true;
-  } else {
-    return false;
-  }
+  } 
+  return false;
 }
