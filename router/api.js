@@ -5,7 +5,7 @@ const taskController = require('../controllers/task');
 
 api.get('/tasks', (ctx) => taskController.getAllTasks(ctx));
 api.get('/task', (ctx) => taskController.getCurrentTask(ctx));
-api.post('/task', (ctx) => taskController.createTask(ctx));
+api.post('/task', (ctx) => taskController.createNewTask(ctx));
 api.put('/task', (ctx) => taskController.changeMainTask(ctx));
 api.delete('/task', (ctx) => taskController.endTask(ctx));
 
