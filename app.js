@@ -1,10 +1,10 @@
-const Koa = require('koa');
-const json = require('koa-json');
-const koaBody = require('koa-body');
-const { sequelize } = require('./models');
+const Koa = require("koa");
+const json = require("koa-json");
+const koaBody = require("koa-body");
+const { sequelize } = require("./models");
 
 const app = new Koa();
-const apiRouter = require('./router/api');
+const apiRouter = require("./router/api");
 
 sequelize.sync();
 
@@ -13,11 +13,11 @@ app
   .use(koaBody())
   .use(apiRouter.routes())
   .use(apiRouter.allowedMethods())
-  .use(async ctx => {
+  .use(async (ctx) => {
     ctx.body = {
-      "message": "not found",
-      "code": 404
-    }
+      message: "not found",
+      code: 404,
+    };
   });
 
 if (process.env.APP_PORT) {
@@ -25,5 +25,7 @@ if (process.env.APP_PORT) {
   console.info(" App is listening on:", process.env.APP_PORT);
 } else {
   app.listen(3000);
-  console.info(" App is listening on: 3000 \n To change app port setup it in dotenv file!");
+  console.info(
+    " App is listening on: 3000 \n To change app port setup it in dotenv file!"
+  );
 }
