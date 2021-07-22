@@ -1,10 +1,14 @@
-const Koa = require("koa");
-const json = require("koa-json");
-const koaBody = require("koa-body");
+import Koa from "koa";
+import { config as dotenv } from "dotenv";
+import json from "koa-json";
+import koaBody from "koa-body";
+
 const { sequelize } = require("./models");
 
 const app = new Koa();
 const apiRouter = require("./router/api");
+
+dotenv();
 
 sequelize.sync();
 
@@ -14,6 +18,7 @@ app
   .use(apiRouter.routes())
   .use(apiRouter.allowedMethods())
   .use(async (ctx) => {
+    ctx.status = 404;
     ctx.body = {
       message: "not found",
       code: 404,

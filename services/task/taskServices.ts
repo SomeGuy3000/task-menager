@@ -10,7 +10,7 @@ module.exports = {
     }
     return responseBuilder("error", 500);
   },
-  getCurrentTask: async (userID) => {
+  getCurrentTask: async (userID: number) => {
     const taskInProgress = await TaskProgress.findOne({
       where: {
         userID: userID,
@@ -29,7 +29,7 @@ module.exports = {
     }
     return responseBuilder("ok", 200, []);
   },
-  createNewTask: async (taskName) => {
+  createNewTask: async (taskName: string) => {
     const tasks = await Task.findOne({
       where: {
         taskName: taskName,
@@ -58,12 +58,13 @@ module.exports = {
       return responseBuilder("error", 500);
     }
   },
-  changeMainTask: async (taskID, userID) => {
+  changeMainTask: async (taskID: number, userID: number) => {
     const taskInProgress = await TaskProgress.findOne({
       where: {
         taskID: taskID,
       },
     });
+    console.log(taskInProgress)
     if (taskInProgress) {
       if (taskInProgress.userID == userID) {
         return responseBuilder("task is already in progress", 409);
@@ -86,7 +87,7 @@ module.exports = {
       return responseBuilder("task not found", 409);
     }
   },
-  endTask: async (taskID) => {
+  endTask: async (taskID: number) => {
     const taskProgress = await TaskProgress.findOne({
       where: {
         taskID: taskID,
@@ -111,7 +112,7 @@ module.exports = {
   },
 };
 
-async function stopPreviousTask(userID) {
+async function stopPreviousTask(userID: number) {
   const taskAlreadyInProgress = await TaskProgress.findOne({
     where: {
       userID: userID,

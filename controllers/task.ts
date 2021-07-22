@@ -1,12 +1,13 @@
+import Koa from "koa";
 const taskServices = require("../services/task/taskServices");
 
 module.exports = {
-  getAllTasks: async (ctx) => {
-    const res = await taskServices.findAllTasks();
+  getAllTasks: async (ctx: Koa.ParameterizedContext) => {
+    const res = await taskServices.getAllTasks();
     ctx.response.body = res;
     ctx.status = res.code;
   },
-  getCurrentTask: async (ctx) => {
+  getCurrentTask: async (ctx: Koa.ParameterizedContext) => {
     const userID = ctx.request.query.userID;
     if (userID) {
       const res = await taskServices.getCurrentTask(userID);
@@ -16,7 +17,7 @@ module.exports = {
       ctx.status = 204;
     }
   },
-  createNewTask: async (ctx) => {
+  createNewTask: async (ctx: Koa.ParameterizedContext) => {
     const taskName = ctx.request.body.taskName;
     if (taskName) {
       const res = await taskServices.createNewTask(taskName);
@@ -26,7 +27,7 @@ module.exports = {
       ctx.status = 204;
     }
   },
-  changeMainTask: async (ctx) => {
+  changeMainTask: async (ctx: Koa.ParameterizedContext) => {
     const taskID = ctx.request.body.taskID;
     const userID = ctx.request.body.userID;
     if (taskID && userID) {
@@ -37,7 +38,7 @@ module.exports = {
       ctx.status = 204;
     }
   },
-  endTask: async (ctx) => {
+  endTask: async (ctx: Koa.ParameterizedContext) => {
     const taskID = ctx.request.query.taskID;
     if (taskID) {
       const res = await taskServices.endTask(taskID);

@@ -1,4 +1,4 @@
-module.exports = (message, code, data = null) => {
+module.exports = (message: string, code: number, data: any = null) => {
   if (data) {
     return {
       message: message,
